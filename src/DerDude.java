@@ -11,10 +11,40 @@ public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 	public class DudeBoard {
 
 	     int houses, seeds;
+	     ArrayList<Integer> boardState = new ArrayList<>();
 	    public DudeBoard(int houses, int seeds){
 	        this.houses = houses;
 	        this.seeds = seeds;
+	        for (int i=0; i<houses;i++){
+	        	boardState.add(seeds);
+			}
+	        boardState.add(0);//Mulde
+	        for (int i=0; i<houses;i++){
+	        	boardState.add(seeds);
+			}
+	        boardState.add(0);//Mulde
+	        boardState.add(0); //für Flag
 
+	    }
+
+	    public void updateBoard(Board board){
+	    	ArrayList<Integer> tmpState = new ArrayList<>();
+	    	List<Integer> houses = (List<Integer>)board.getState().iterator().next();
+			for (int i = 0; i<houses.size(); i++){
+				tmpState.add(houses.get(i));
+			}
+			List<Integer> houses2 = (List<Integer>)board.getState().iterator().next();
+			tmpState.add(0);
+			for (int i = 0; i<houses.size(); i++){
+				tmpState.add(houses.get(i));
+			}
+			int score1 = (int)board.getState().iterator().next();
+			tmpState.set(houses.size(), score1);
+			int score2 = (int)board.getState().iterator().next();
+			tmpState.add(score2);
+			tmpState.add(0);//Flag
+			
+			boardState = tmpState;
 	    }
 
 
@@ -48,7 +78,7 @@ public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 	           //Sonderfaelle. Letzter Stein in Mulde, dann nochmal neu ziehen
 	           if (house + steps == houses) {
 
-	               state.set(14, Integer.MAX_VALUE);
+	               state.set(houses*2+2, Integer.MAX_VALUE);
 	           }
 
 	           else if (house + steps < houses) {
@@ -78,7 +108,7 @@ public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 	           //Sonderfaelle. Letzter Stein in Mulde, dann nochmal neu ziehen
 	           if (house + steps == houses*2+1) {
 
-	               state.set(14,Integer.MAX_VALUE);
+	               state.set(houses*2+2,Integer.MAX_VALUE);
 	           }
 	           else if (house + steps < houses*2+1 && house+steps > houses) {
 
@@ -107,14 +137,8 @@ public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 		int seed = houses.get(0);
 		DudeBoard db = new DudeBoard(houses.size(),seed);
 		System.out.println("DerDudeDebug: "+db.houses+"/"+db.seeds);
-		ArrayList<Integer> state = new ArrayList<Integer>();
-	       for(int i=0;i < 15; i++){
-	           state.add(4);
-	       }
-	      System.out.print(Arrays.toString(state.toArray()));
-	      db.makeMove(state, 12, 2);
-	      System.out.print(Arrays.toString(state.toArray()));
-
+		
+		
 	}
 
 	@Override
