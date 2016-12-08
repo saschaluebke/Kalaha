@@ -1,12 +1,47 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import info.kwarc.teaching.AI.Kalah.Board;
 
 public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 
+	private DudeBoard currentDudeBoard;
+	static private Board currentBoard; 		//muessen beide gleich sein.
+	@Override
+	public void init(Board board, boolean playerOne) {
+		List<Integer> houses = (List<Integer>)board.getState().iterator().next();
+		int seed = houses.get(0);
+		currentDudeBoard = new DudeBoard(houses.size(),seed);
+		currentBoard = board;
+		
+		//Debug
+		System.out.println("DerDudeDebug: "+currentDudeBoard.houses+"/"+currentDudeBoard.seeds);
+		System.out.println(currentDudeBoard.boardState);
+		currentDudeBoard.makeMove(currentDudeBoard.boardState, 4, 1);
+		System.out.println(currentDudeBoard.boardState);
+	}
+
+	@Override
+	public int move() {
+		currentDudeBoard.updateBoard(currentBoard);
+		System.out.println(currentDudeBoard.boardState);
+		return 1;
+	}
+
+	@Override
+	public String name() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<String> students() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	public class DudeBoard {
 
@@ -28,19 +63,25 @@ public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 	    }
 
 	    public void updateBoard(Board board){
+	    	
 	    	ArrayList<Integer> tmpState = new ArrayList<>();
-	    	List<Integer> houses = (List<Integer>)board.getState().iterator().next();
-			for (int i = 0; i<houses.size(); i++){
-				tmpState.add(houses.get(i));
+	    	int count=0;
+	    	
+	    	List<Integer> houses1= (List<Integer>)board.getState().iterator().next();
+	    	List<Integer> houses2= (List<Integer>)board.getState().iterator().next();
+	    	System.out.println(houses1);
+	    	
+	    	for (int i = 0; i<houses1.size(); i++){
+				tmpState.add(houses1.get(i));
 			}
-			List<Integer> houses2 = (List<Integer>)board.getState().iterator().next();
 			tmpState.add(0);
-			for (int i = 0; i<houses.size(); i++){
-				tmpState.add(houses.get(i));
+			for (int i = 0; i<houses2.size(); i++){
+				tmpState.add(houses2.get(i));
 			}
-			int score1 = (int)board.getState().iterator().next();
-			tmpState.set(houses.size(), score1);
-			int score2 = (int)board.getState().iterator().next();
+			int score1 = board.getScore(1);
+			tmpState.set(houses1.size(), score1);
+			int score2 = board.getScore(2);
+			
 			tmpState.add(score2);
 			tmpState.add(0);//Flag
 			
@@ -129,34 +170,6 @@ public class DerDude extends info.kwarc.teaching.AI.Kalah.Agent{
 
 	   
 
-	}
-	
-	@Override
-	public void init(Board board, boolean playerOne) {
-		List<Integer> houses = (List<Integer>)board.getState().iterator().next();
-		int seed = houses.get(0);
-		DudeBoard db = new DudeBoard(houses.size(),seed);
-		System.out.println("DerDudeDebug: "+db.houses+"/"+db.seeds);
-		
-		
-	}
-
-	@Override
-	public int move() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Iterable<String> students() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
